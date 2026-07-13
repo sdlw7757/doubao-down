@@ -53,13 +53,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## ⭐ Star 历史
+## ⭐ Star History
 
-> 本项目托管在 GitHub，Star 历史图需要仓库公开后通过 [Star History](https://star-history.com/) 查看。
-
-```
 [![Star History Chart](https://api.star-history.com/svg?repos=sdlw7757/doubao-down&type=Date)](https://star-history.com/#sdlw7757/doubao-down&Date)
-```
 
 ---
 
