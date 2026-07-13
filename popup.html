@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>豆包视频图片无水印下载</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8faff;
+      --border: #e2e8f0;
+      --border-active: #3884ff;
+      --accent: #3884ff;
+      --accent-light: #5b9cff;
+      --accent-dim: rgba(56, 132, 255, 0.08);
+      --accent-glow: rgba(56, 132, 255, 0.15);
+      --purple: #7c5cfc;
+      --purple-glow: rgba(124, 92, 252, 0.1);
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --error: #ef4444;
+      --radius: 10px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 332px;
+      background: var(--bg);
+      font-family: var(--font);
+      padding: 10px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle tech grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(56, 132, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 132, 255, 0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Ambient glow orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(56, 132, 255, 0.06), transparent);
+      top: -60px; right: -60px;
+    }
+    .orb-2 {
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(124, 92, 252, 0.05), transparent);
+      bottom: -40px; left: -40px;
+    }
+
+    .panel {
+      position: relative;
+      z-index: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      transition: all 0.25s ease;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ===== Header ===== */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px var(--accent-glow);
+    }
+    .header-text { flex: 1; }
+    .header-text h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+    .header-text p {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-top: 1px;
+    }
+    .header-badge {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== Activation Panel ===== */
+    .act-content {
+      text-align: center;
+      padding: 8px 0;
+    }
+    .act-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent-dim), var(--purple-glow));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin: 0 auto 14px;
+      border: 1px solid var(--border);
+    }
+    .act-content h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .act-content p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+    .act-content input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .act-content input::placeholder {
+      color: var(--text-muted);
+      letter-spacing: 0;
+    }
+    .act-content input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+      background: rgba(255,255,255,0.05);
+    }
+    .act-content button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent), #2563eb);
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 13px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px var(--accent-glow);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .act-content button::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .act-content button:hover::after { transform: translateX(100%); }
+    .act-content button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px var(--accent-glow);
+    }
+    .act-content button:active { transform: scale(0.97); }
+
+    .hint {
+      font-size: 11px;
+      margin-top: 12px;
+      text-align: center;
+      min-height: 18px;
+      font-weight: 500;
+    }
+    .hint.error { color: var(--error); }
+    .hint.success { color: var(--success); }
+
+    /* ===== Loading ===== */
+    #activatingPanel .panel-content {
+      text-align: center;
+      padding: 28px 0;
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #e2e8f0;
+      border-top-color: var(--accent);
+      border-right-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #activatingPanel p {
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* ===== Info Card ===== */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .info-item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .info-item.full {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+    }
+    .info-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+    .info-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .info-value .accent { color: var(--accent); }
+    .info-value .success { color: var(--success); }
+
+    /* ===== Stats ===== */
+    .stats {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+    .stat-card {
+      flex: 1;
+      background: linear-gradient(135deg, rgba(56, 132, 255, 0.03), rgba(136, 85, 255, 0.03));
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 8px;
+      text-align: center;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      opacity: 0.4;
+    }
+    .stat-card:hover {
+      border-color: var(--border-active);
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, rgba(56, 132, 255, 0.06), rgba(136, 85, 255, 0.06));
+    }
+    .stat-number {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+    .stat-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 6px;
+    }
+
+    .version-line {
+      text-align: center;
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 10px;
+      letter-spacing: 0.5px;
+    }
+    .version-line span {
+      color: var(--accent);
+    }
+
+    /* Pulse ring decoration */
+    .pulse-ring {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 1px solid rgba(56, 132, 255, 0.08);
+      top: -20px;
+      right: -20px;
+      animation: pulse-ring 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div id="activationPanel" class="panel hidden">
+    <div class="pulse-ring"></div>
+    <div class="act-content">
+      <div class="act-icon">🔑</div>
+      <h3>激活扩展</h3>
+      <p>输入激活码以解锁全部功能</p>
+      <input type="text" id="cardKey" placeholder="请输入激活码" autocomplete="off">
+      <button id="activateBtn">立即激活</button>
+      <div id="activationHint" class="hint"></div>
+    </div>
+  </div>
+
+  <div id="activatingPanel" class="panel hidden">
+    <div class="panel-content">
+      <div class="spinner"></div>
+      <p>正在验证...</p>
+    </div>
+  </div>
+
+  <div id="activatedPanel" class="panel">
+    <div class="pulse-ring"></div>
+
+    <div class="header">
+      <div class="header-icon">⚡</div>
+      <div class="header-text">
+        <h2>豆包下载器</h2>
+        <p>AI 图片 · 视频 一键下载</p>
+      </div>
+      <div class="header-badge">v<span id="versionText">1.1.0</span></div>
+    </div>
+
+    <div id="activationInfo" style="display:none;"></div>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label">状态</div>
+        <div class="info-value"><span class="success">●</span> 已激活</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">有效期</div>
+        <div class="info-value"><span class="accent">永久</span></div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="imageCount">0</div>
+        <div class="stat-label">已捕获图片</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="videoCount">0</div>
+        <div class="stat-label">已捕获视频</div>
+      </div>
+    </div>
+
+    <div class="version-line">
+      SYSTEM · <span>ONLINE</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+  <script src="cleanup.js"></script>
+</body>
+</html>
