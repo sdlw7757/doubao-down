@@ -11,7 +11,7 @@
     }
     var vt = document.getElementById('versionText');
     if (vt) {
-      vt.textContent = '1.1.0';
+      vt.textContent = '3.1.0';
     }
   }, 50);
   setTimeout(function() { clearInterval(_cleanRemaining); }, 3000);

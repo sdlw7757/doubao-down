@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "豆包下载器",
-  "version": "1.0",
+  "version": "3.1.0",
   "description": "豆包生成的视频和图片无水印直接下载，无限制次数",
   "author": "mr_dadong",
   "action": {
@@ -21,25 +21,37 @@
     "64": "icon.png",
     "128": "icon.png"
   },
-  "permissions": ["downloads", "storage", "tabs"],
+  "permissions": ["downloads", "storage", "tabs", "activeTab", "scripting"],
   "host_permissions": [
-    "https://*.doubao.com/*",
-    "https://api-normal.doubao.com/*"
+    "*://*.doubao.com/*",
+    "*://*.dola.com/*",
+    "https://api-normal.doubao.com/*",
+    "https://*.snssdk.com/*",
+    "https://*.douyin.com/*",
+    "https://*.vlabvod.com/*",
+    "https://*.byteimg.com/*",
+    "https://*.bytescm.com/*",
+    "https://*.bytedance.com/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["https://www.doubao.com/*"],
+      "matches": ["*://*.doubao.com/*"],
       "js": ["content.js"],
       "run_at": "document_start",
       "world": "MAIN"
     },
     {
-      "matches": ["https://www.doubao.com/*"],
+      "matches": ["*://*.doubao.com/*"],
       "js": ["forwarder.js"],
-      "run_at": "document_start"
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.doubao.com/*"],
+      "js": ["directory.js"],
+      "css": ["directory.css"]
     }
   ]
 }
