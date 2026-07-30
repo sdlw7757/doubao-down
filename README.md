@@ -1,7 +1,7 @@
 # 豆包下载器
 
 > 豆包 AI 生成的视频和图片 — **一键无水印下载**，无限制次数
-<img width="306" height="288" alt="捕获" src="https://github.com/user-attachments/assets/702ac810-099f-4451-8def-dc1bf105483c" />
+<img width="299" height="272" alt="屏幕截图 2026-07-30 180023" src="https://github.com/user-attachments/assets/0215d044-9345-4950-ad02-179473b03b82" />
 
 ## ✨ 功能
 
